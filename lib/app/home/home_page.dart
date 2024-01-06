@@ -19,15 +19,20 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('${FirebaseService.instance.firebaseAuth.currentUser?.displayName}'
-            .substring(
-                0,
-                '${FirebaseService.instance.firebaseAuth.currentUser?.displayName}'
-                            .length >
-                        12
-                    ? 12
-                    : '${FirebaseService.instance.firebaseAuth.currentUser?.displayName}'
-                        .length)),
+        title: Text(
+          FirebaseService.instance.firebaseAuth.currentUser?.displayName == null
+              ? 'Hello user'
+              : '${FirebaseService.instance.firebaseAuth.currentUser?.displayName}'
+                  .substring(
+                  0,
+                  '${FirebaseService.instance.firebaseAuth.currentUser?.displayName}'
+                              .length >
+                          12
+                      ? 12
+                      : '${FirebaseService.instance.firebaseAuth.currentUser?.displayName}'
+                          .length,
+                ),
+        ),
         actions: [
           // profile
           IconButton(
@@ -51,41 +56,80 @@ class _HomePageState extends State<HomePage> {
                   FirebaseService.instance.firebaseAuth.currentUser?.photoURL !=
                           null
                       ? null
-                      : Text((FirebaseService.instance.firebaseAuth.currentUser
-                                      ?.displayName
-                                      ?.split(" ")
-                                      .firstOrNull ??
-                                  "")
-                              .split("")
-                              .firstOrNull ??
-                          ''),
+                      : Text(FirebaseService
+                              .instance.firebaseAuth.currentUser?.displayName
+                              ?.substring(0, 1) ??
+                          "U"),
             ),
           )
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16.0),
-          _buildAutocomplete(context),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 16.0),
+            _buildAutocomplete(context),
+            Consumer<HomeController>(
+              builder: (context, controller, child) =>
+                  controller.autoCompleteAllData.isEmpty
+                      ? const SizedBox.shrink()
+                      : const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Last Searched data", style: TextStyle()),
+                        ),
+            ),
+            Expanded(
+              child: Consumer<HomeController>(
+                  builder: (context, controller, child) {
+                final data = controller.lastSelData;
+                if (controller.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (controller.autoCompleteAllData.isEmpty) {
+                  return const Center(
+                    child: Text("There is no search data"),
+                  );
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.autoCompleteAllData.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: data ==
+                              controller.autoCompleteAllData.elementAt(index)
+                          ? Colors.blue.shade100
+                          : null,
+                      child: ListTile(
+                        selectedColor: data ==
+                                controller.autoCompleteAllData.elementAt(index)
+                            ? Colors.blue.shade100
+                            : null,
+                        title: Text(controller.autoCompleteAllData
+                            .elementAt(index)
+                            .locationName),
+                        subtitle: controller.autoCompleteAllData
+                                    .elementAt(index)
+                                    .location
+                                    .state ==
+                                null
+                            ? null
+                            : Text(controller.autoCompleteAllData
+                                    .elementAt(index)
+                                    .location
+                                    .state ??
+                                ''),
+                      ),
+                    );
+                  },
+                );
+              }),
+            ),
+          ],
+        ),
       ),
-      bottomSheet: _lastSelectedLocation(),
     );
-  }
-
-  Widget _lastSelectedLocation() {
-    return Consumer<HomeController>(builder: (context, controller, child) {
-      final data = controller.lastSelData;
-      return data == null
-          ? const SizedBox.shrink()
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Last Selected Location'),
-                Text(data.locationName),
-              ],
-            );
-    });
   }
 
   Widget _buildAutocomplete(BuildContext context) {
@@ -107,6 +151,9 @@ class _HomePageState extends State<HomePage> {
             return TextFormField(
               controller: controller,
               focusNode: focusNode,
+              decoration: const InputDecoration(
+                hintText: "Search location",
+              ),
               onFieldSubmitted: (String value) {
                 onFieldSubmitted();
               },

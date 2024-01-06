@@ -169,9 +169,6 @@ class AppRoute {
       '/home': (context) {
         return const HomePage();
       },
-      '/edit': (context) {
-        return const FlutterLogo();
-      }
     };
   }
 }
