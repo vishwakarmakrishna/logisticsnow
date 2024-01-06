@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "205344315713",
+    "project_id": "logicsnow",
+    "storage_bucket": "logicsnow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205344315713:android:02f8fe38df0c6d8dcbe9c0",
+        "android_client_info": {
+          "package_name": "com.krinfinity.logisticsnow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205344315713-5v8511s48cac44jr7911tfpnf6vo026f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfj9sv_9WPJ1Z8JJuDgtk2_yML6eTjHlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205344315713-5v8511s48cac44jr7911tfpnf6vo026f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "205344315713-3896rljc2ninpd3g4ddoptvetah7g5ci.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.krinfinity.logisticsnow"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
