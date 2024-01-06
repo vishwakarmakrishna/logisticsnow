@@ -75,7 +75,6 @@ class HomeController extends ChangeNotifier {
           setError(true);
         }
       } catch (e) {
-        print(e);
         // Handle Dio errors or other exceptions
         setError(true);
       } finally {
